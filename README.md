@@ -1305,6 +1305,79 @@ These configs work for my workflow. You should:
 3. Remove what you don't use
 4. Add your own patterns
 
+### Project-Level Customization
+
+When ECC is installed globally (`~/.claude/`), you can add **project-specific** overrides that apply only inside a given repository — without modifying the global install.
+
+#### Directory Layout
+
+Create these paths at the root of your project:
+
+```
+your-project/
+  .claude/
+    commands/       # Project-specific slash commands (*.md)
+    rules/          # Project-specific rules
+  CLAUDE.md         # Repo-wide instructions (auto-loaded by Claude Code)
+```
+
+Project-level files take precedence over global files with the same name.
+
+#### Custom Slash Commands
+
+Place Markdown files in `.claude/commands/`. The filename (minus `.md`) becomes the command name. Use `$ARGUMENTS` for user input.
+
+```markdown
+# .claude/commands/assess-company.md
+Perform a structured company assessment on: $ARGUMENTS
+
+1. Research the company background
+2. Summarize products and technology
+3. Identify risks and opportunities
+4. Output a markdown report
+```
+
+This gives you `/assess-company` inside the project.
+
+#### Custom Rules
+
+Place Markdown files in `.claude/rules/` for domain-specific guidance:
+
+```markdown
+# .claude/rules/biotech.md
+When reviewing biotech companies:
+- Validate clinical trial phases and timelines
+- Check FDA regulatory pathway
+- Assess IP portfolio and freedom-to-operate
+```
+
+#### Project Instructions (`CLAUDE.md`)
+
+A `CLAUDE.md` at the repo root is read automatically by Claude Code. Use it for repo-wide context:
+
+```markdown
+# CLAUDE.md
+This repo contains company assessment research.
+- Each top-level folder is a company/project assessment
+- Submodules must be initialized: `git submodule update --init --recursive`
+- Follow conventional commits: feat:, fix:, docs:, chore:
+```
+
+#### Updating ECC Without Losing Customizations
+
+Project-level files in `.claude/` are independent of the global install. To update ECC:
+
+```bash
+cd tools/everything-claude-code   # or wherever the submodule lives
+git pull origin main
+./install.sh python               # re-install global files
+cd ../..
+git add tools/everything-claude-code
+git commit -m "chore: update everything-claude-code submodule"
+```
+
+Your project-level `.claude/` directory and `CLAUDE.md` are untouched.
+
 ---
 
 ## 💜 Sponsors
