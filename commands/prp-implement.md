@@ -3,7 +3,7 @@ description: Execute an implementation plan with rigorous validation loops
 argument-hint: <path/to/plan.md>
 ---
 
-> Adapted from [PRPs-agentic-eng](https://github.com/Wirasm/PRPs-agentic-eng) by Wirasm. Part of the PRP workflow series.
+> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
 
 # PRP Implement
 
@@ -47,7 +47,7 @@ Note available commands for: type-check, lint, test, build.
 Read the plan file:
 
 ```bash
-cat $ARGUMENTS
+cat "$ARGUMENTS"
 ```
 
 Extract these sections from the plan:
@@ -171,9 +171,21 @@ Build must succeed with zero errors.
 ```bash
 # Start server, run tests, stop server
 [project dev server command] &
-sleep 3
+SERVER_PID=$!
+
+# Wait for server to be ready (adjust port as needed)
+for i in $(seq 1 30); do
+  curl -sf http://localhost:PORT/health >/dev/null 2>&1 && break
+  sleep 1
+done
+
 [integration test command]
-kill %1
+TEST_EXIT=$?
+
+kill "$SERVER_PID" 2>/dev/null || true
+wait "$SERVER_PID" 2>/dev/null || true
+
+exit "$TEST_EXIT"
 ```
 
 ### Level 5: Edge Case Testing
@@ -259,7 +271,7 @@ If this implementation was for a PRD phase:
 
 ```bash
 mkdir -p .claude/PRPs/plans/completed
-mv $ARGUMENTS .claude/PRPs/plans/completed/
+mv "$ARGUMENTS" .claude/PRPs/plans/completed/
 ```
 
 **CHECKPOINT**: Report created. PRD updated. Plan archived.

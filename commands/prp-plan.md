@@ -3,7 +3,7 @@ description: Create comprehensive feature implementation plan with codebase anal
 argument-hint: <feature description | path/to/prd.md>
 ---
 
-> Adapted from [PRPs-agentic-eng](https://github.com/Wirasm/PRPs-agentic-eng) by Wirasm. Part of the PRP workflow series.
+> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
 
 # PRP Plan
 
@@ -214,7 +214,7 @@ mkdir -p .claude/PRPs/plans
 
 ### Plan Template
 
-```markdown
+````markdown
 # Plan: [Feature Name]
 
 ## Summary
@@ -499,3 +499,4 @@ A developer unfamiliar with this codebase should be able to implement the featur
 - Run `/prp-implement <plan-path>` to execute this plan
 - Run `/plan` for quick conversational planning without artifacts
 - Run `/prp-prd` to create a PRD first if scope is unclear
+````

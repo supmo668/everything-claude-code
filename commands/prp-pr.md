@@ -5,11 +5,14 @@ argument-hint: [base-branch] (default: main)
 
 # Create Pull Request
 
-> Adapted from [PRPs-agentic-eng](https://github.com/Wirasm/PRPs-agentic-eng) by Wirasm. Part of the PRP workflow series.
+> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
 
-**Input**: $ARGUMENTS
+**Input**: `$ARGUMENTS` — optional, may contain a base branch name and/or flags (e.g., `--draft`).
 
-**Base branch**: Use `$ARGUMENTS` if provided, otherwise default to `main`.
+**Parse `$ARGUMENTS`**:
+- Extract any recognized flags (`--draft`)
+- Treat remaining non-flag text as the base branch name
+- Default base branch to `main` if none specified
 
 ---
 
@@ -135,15 +138,7 @@ gh pr create \
   --title "<PR title>" \
   --base <base-branch> \
   --body "<PR body>"
-```
-
-If `$ARGUMENTS` includes `--draft`:
-```bash
-gh pr create \
-  --title "<PR title>" \
-  --base <base-branch> \
-  --body "<PR body>" \
-  --draft
+  # Add --draft if the --draft flag was parsed from $ARGUMENTS
 ```
 
 ---

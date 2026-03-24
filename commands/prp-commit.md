@@ -5,7 +5,7 @@ argument-hint: [target description] (blank = all changes)
 
 # Smart Commit
 
-> Adapted from [PRPs-agentic-eng](https://github.com/Wirasm/PRPs-agentic-eng) by Wirasm. Part of the PRP workflow series.
+> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
 
 **Input**: $ARGUMENTS
 
@@ -33,7 +33,7 @@ Interpret `$ARGUMENTS` to determine what to stage:
 | `staged` | Use whatever is already staged | *(no git add)* |
 | `*.ts` or `*.py` etc. | Stage matching glob | `git add '*.ts'` |
 | `except tests` | Stage all, then unstage tests | `git add -A && git reset -- '**/*.test.*' '**/*.spec.*' '**/test_*'` |
-| `only new files` | Stage untracked files only | `git add $(git ls-files --others --exclude-standard)` |
+| `only new files` | Stage untracked files only | `git ls-files --others --exclude-standard \| xargs -r git add` |
 | `the auth changes` | Interpret from status/diff — find auth-related files | `git add <matched files>` |
 | Specific filenames | Stage those files | `git add <files>` |
 

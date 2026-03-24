@@ -5,7 +5,7 @@ argument-hint: [pr-number | pr-url | blank for local review]
 
 # Code Review
 
-> PR review mode adapted from [PRPs-agentic-eng](https://github.com/Wirasm/PRPs-agentic-eng) by Wirasm. Part of the PRP workflow series.
+> PR review mode adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
 
 **Input**: $ARGUMENTS
 
@@ -107,6 +107,13 @@ Build review context:
 
 Read each changed file **in full** (not just the diff hunks — you need surrounding context).
 
+For PR reviews, fetch the full file contents at the PR head revision:
+```bash
+for file in $(gh pr diff <NUMBER> --name-only); do
+  gh api "repos/{owner}/{repo}/contents/$file?ref=<head-branch>" --jq '.content' | base64 -d
+done
+```
+
 Apply the review checklist across 7 categories:
 
 | Category | What to Check |
@@ -132,21 +139,36 @@ Assign severity to each finding:
 
 Run available validation commands:
 
+Detect the project type from config files (`package.json`, `Cargo.toml`, `go.mod`, `pyproject.toml`, etc.), then run the appropriate commands:
+
+**Node.js / TypeScript** (has `package.json`):
 ```bash
-# Type checking (if applicable)
-npm run typecheck || npx tsc --noEmit || bunx tsc --noEmit
-
-# Linting
-npm run lint || npx eslint . || cargo clippy || go vet ./...
-
-# Tests
-npm test || cargo test || go test ./... || pytest
-
-# Build
-npm run build || cargo build || go build ./...
+npm run typecheck 2>/dev/null || npx tsc --noEmit 2>/dev/null  # Type check
+npm run lint                                                    # Lint
+npm test                                                        # Tests
+npm run build                                                   # Build
 ```
 
-Run whichever commands exist in the project. Record pass/fail for each.
+**Rust** (has `Cargo.toml`):
+```bash
+cargo clippy -- -D warnings  # Lint
+cargo test                   # Tests
+cargo build                  # Build
+```
+
+**Go** (has `go.mod`):
+```bash
+go vet ./...    # Lint
+go test ./...   # Tests
+go build ./...  # Build
+```
+
+**Python** (has `pyproject.toml` / `setup.py`):
+```bash
+pytest  # Tests
+```
+
+Run only the commands that apply to the detected project type. Record pass/fail for each.
 
 ### Phase 5 — DECIDE
 
@@ -221,9 +243,21 @@ gh pr review <NUMBER> --request-changes --body "<summary with required fixes>"
 gh pr review <NUMBER> --comment --body "<summary>"
 ```
 
-For individual file-level comments on specific findings, use:
+For inline comments on specific lines, use the GitHub review comments API:
 ```bash
-gh pr comment <NUMBER> --body "<detailed comment with file references>"
+gh api "repos/{owner}/{repo}/pulls/<NUMBER>/comments" \
+  -f body="<comment>" \
+  -f path="<file>" \
+  -F line=<line-number> \
+  -f commit_id="$(gh pr view <NUMBER> --json headRefOid --jq .headRefOid)"
+```
+
+Alternatively, post a single review with multiple inline comments at once:
+```bash
+gh api "repos/{owner}/{repo}/pulls/<NUMBER>/reviews" \
+  -f event="COMMENT" \
+  -f body="<overall summary>" \
+  --input comments.json  # [{"path": "file", "line": N, "body": "comment"}, ...]
 ```
 
 ### Phase 8 — OUTPUT

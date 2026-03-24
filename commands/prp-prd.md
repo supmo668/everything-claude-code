@@ -5,7 +5,7 @@ argument-hint: [feature/product idea] (blank = start with questions)
 
 # Product Requirements Document Generator
 
-> Adapted from [PRPs-agentic-eng](https://github.com/Wirasm/PRPs-agentic-eng) by Wirasm. Part of the PRP workflow series.
+> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
 
 **Input**: $ARGUMENTS
 
@@ -74,32 +74,22 @@ Ask these questions (present all at once, user can answer together):
 
 After foundation answers, conduct research:
 
-**Launch a sub-agent to research market context:**
+**Research market context:**
 
-```
-Research the market context for: {product/feature idea}
+1. Find similar products/features in the market
+2. Identify how competitors solve this problem
+3. Note common patterns and anti-patterns
+4. Check for recent trends or changes in this space
 
-FIND:
-1. Similar products/features in the market
-2. How competitors solve this problem
-3. Common patterns and anti-patterns
-4. Recent trends or changes in this space
+Compile findings with direct links, key insights, and any gaps in available information.
 
-Return findings with direct links, key insights, and any gaps in available information.
-```
+**If a codebase exists, explore it in parallel:**
 
-**If a codebase exists, launch a parallel sub-agent to explore it:**
+1. Find existing functionality relevant to the product/feature idea
+2. Identify patterns that could be leveraged
+3. Note technical constraints or opportunities
 
-```
-Find existing functionality relevant to: {product/feature idea}
-
-LOCATE:
-1. Related existing functionality
-2. Patterns that could be leveraged
-3. Technical constraints or opportunities
-
-Return file locations, code patterns, and conventions observed.
-```
+Record file locations, code patterns, and conventions observed.
 
 **Summarize findings to user:**
 
@@ -136,46 +126,31 @@ Based on foundation + research, ask:
 
 ## Phase 5: GROUNDING - Technical Feasibility
 
-**If a codebase exists, launch two sub-agents in parallel:**
+**If a codebase exists, perform two parallel investigations:**
 
-Sub-agent 1 (Explore):
-```
-Assess technical feasibility for: {product/feature}
+Investigation 1 — Explore feasibility:
+1. Identify existing infrastructure that can be leveraged
+2. Find similar patterns already implemented
+3. Map integration points and dependencies
+4. Locate relevant configuration and type definitions
 
-LOCATE:
-1. Existing infrastructure we can leverage
-2. Similar patterns already implemented
-3. Integration points and dependencies
-4. Relevant configuration and type definitions
+Record file locations, code patterns, and conventions observed.
 
-Return file locations, code patterns, and conventions observed.
-```
-
-Sub-agent 2 (Analyze):
-```
-Analyze technical constraints for: {product/feature}
-
-TRACE:
-1. How existing related features are implemented end-to-end
-2. Data flow through potential integration points
-3. Architectural patterns and boundaries
-4. Estimated complexity based on similar features
+Investigation 2 — Analyze constraints:
+1. Trace how existing related features are implemented end-to-end
+2. Map data flow through potential integration points
+3. Identify architectural patterns and boundaries
+4. Estimate complexity based on similar features
 
 Document what exists with precise file:line references. No suggestions.
-```
 
 **If no codebase, research technical approaches:**
 
-```
-Research technical approaches for: {product/feature}
+1. Find technical approaches others have used
+2. Identify common implementation patterns
+3. Note known technical challenges and pitfalls
 
-FIND:
-1. Technical approaches others have used
-2. Common implementation patterns
-3. Known technical challenges and pitfalls
-
-Return findings with citations and gap analysis.
-```
+Compile findings with citations and gap analysis.
 
 **Summarize to user:**
 
