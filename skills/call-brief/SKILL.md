@@ -1,7 +1,7 @@
 ---
 name: call-brief
 description: Generate a customized pre-call brief and sales script package for a warm lead. Input a contact name, title, and company — outputs a research-backed brief with opening chit-chat, tailored discovery questions, escalation questions, objection handling, and post-call checklist. Saves to sales_gtm/docs/dealflow/briefs/.
-origin: ECC
+origin: project
 metadata:
   filePattern: ["**/dealflow/briefs/**", "**/call-scripts*"]
   bashPattern: []
